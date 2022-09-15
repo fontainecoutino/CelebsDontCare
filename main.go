@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"github.com/fontainecoutino/CelebsDontCare/database/retrieve"
+)
 
 func main() {
-	fmt.Println("hello world")
+	// get the data from twitter in order to store in DB
+	retrieve.GetData()
 }
