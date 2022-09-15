@@ -1,0 +1,16 @@
+#!/bin/bash
+
+userID=$1
+bearerToken="AAAAAAAAAAAAAAAAAAAAAG51hAEAAAAAsck3v8QSQo%2BVeiZoSE2b3JSqdy8%3DpeKXanU2xKFDbc9uvk8pC47EoB1Bkiv1IKwCNXJdo91wSYTax4"
+
+echo "Gettig data from userID: $userID"
+
+if [$2 -e ""] 
+then
+    nextPageToken=""
+else
+    nextPageToken="&pagination_token=$2"
+fi
+curl -H "Authorization: Bearer $bearerToken" "https://api.twitter.com/2/users/$userID/tweets?max_results=100$nextPageToken&tweet.fields=created_at"
+
+#curl -H "Authorization: Bearer AAAAAAAAAAAAAAAAAAAAAG51hAEAAAAAsck3v8QSQo%2BVeiZoSE2b3JSqdy8%3DpeKXanU2xKFDbc9uvk8pC47EoB1Bkiv1IKwCNXJdo91wSYTax4" "https://api.twitter.com/2/users/1450174360346574850/tweets?max_results=100&tweet.fields=created_at"
