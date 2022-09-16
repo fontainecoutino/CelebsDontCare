@@ -10,13 +10,21 @@ import (
 
 const Path = "./database/retrieve/"
 
+/**
+ *  Given an userID, gets all of their tweets. The tweets are stored in the file
+ *  tweets.json. The tweets are stored to keep only the text and date of creation.
+ */
 func GetData() {
 	userID := "1450174360346574850" // @CelebJets
 	getTweetsfromUser(userID, Path+"raw.json")
 }
 
 /**
- *  get all current tweets from TwitterUserID and store in tweets.json
+ *  The format of the file after the function is as follows. The tweets are
+ *  stored to keep only the text and date of creation. Each tweet in the file is stored as a map
+ * 	and a comma is added after wards. This is true for every tweet; which means that the function
+ *  will produce a file that is not in json format. This should be fixed by the caller.
+ *  all current tweets from TwitterUserID and store in tweets.json
  */
 func getTweetsfromUser(userID string, destination string) {
 	nextToken := ""
