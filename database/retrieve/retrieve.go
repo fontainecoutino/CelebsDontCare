@@ -85,6 +85,7 @@ func writeTweetsToFile(userID string, destination string) {
 		return
 	}
 
+	fmt.Println("> Done writing tweets to " + destination)
 }
 
 /**
