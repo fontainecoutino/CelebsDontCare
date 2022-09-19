@@ -16,7 +16,7 @@ const Path = "./database/retrieve/"
  */
 func GetData() {
 	userID := "1450174360346574850" // @CelebJets
-	getTweetsfromUser(userID, Path+"raw.json")
+	writeTweetsToFile(userID, Path+"tweets.json")
 }
 
 /**
@@ -26,7 +26,38 @@ func GetData() {
  *  will produce a file that is not in json format. This should be fixed by the caller.
  *  all current tweets from TwitterUserID and store in tweets.json
  */
-func getTweetsfromUser(userID string, destination string) {
+func writeTweetsToFile(userID string, destination string) {
+
+	getTweetsfromUser(userID, Path+"tempTweets.json")
+
+	/*
+		// update format to be valid json
+		tweetsFile, _ := os.Open(destination)
+		tweetsFileContents, err := ioutil.ReadAll(tweetsFile)
+		if err != nil {
+			fmt.Println("> Error tranformig " + Path + "raw.json" + " to []byte: " + err.Error())
+		}
+		f, err := os.OpenFile(destination, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+		if err != nil {
+			fmt.Println("> Error storing tweet in " + destination + " " + err.Error())
+			return
+		}
+		defer f.Close()
+
+		if _, err = f.WriteString(string(bytes) + comma); err != nil {
+			fmt.Println("> Error storing tweet in " + file + " " + err.Error())
+		}
+	*/
+}
+
+/**
+ *  The format of the file after the function is as follows. The tweets are
+ *  stored to keep only the text and date of creation. Each tweet in the file is stored as a map
+ * 	and a comma is added after wards. This is true for every tweet; which means that the function
+ *  will produce a file that is not in json format. This should be fixed by the caller.
+ *  all current tweets from TwitterUserID and store in tweets.json
+ */
+func getTweetsfromUser(userID string, tempFile string) {
 	nextToken := ""
 	for {
 		// executes command to get data and stores it in database/retrieve/raw.json
@@ -38,22 +69,22 @@ func getTweetsfromUser(userID string, destination string) {
 		}
 
 		// gets raw data from file
-		rawDataFile, _ := os.Open(destination)
+		rawDataFile, _ := os.Open(Path + "raw.json")
 		rawData, err := ioutil.ReadAll(rawDataFile)
 		if err != nil {
-			fmt.Println("> Error tranformig " + destination + " to []byte: " + err.Error())
+			fmt.Println("> Error tranformig " + Path + "raw.json" + " to []byte: " + err.Error())
 		}
 		rawDataFile.Close()
 
+		// gets all tweets, modifies them to keep only tweets and appends them to tweets.json
 		var data map[string]interface{}
 		json.Unmarshal(rawData, &data)
 
-		// gets all tweets, modifies them to keep only tweets and writes them to tweets.json
 		currentTweets := data["data"].([]interface{})
 		for _, tweet := range currentTweets {
 			tweet := tweet.(map[string]interface{})
 			delete(tweet, "id")
-			writeTweetToFile(tweet, Path+"tweets.json", ",")
+			appendTweetToFile(tweet, tempFile, ",")
 		}
 
 		// gets metadata to update retrieve
@@ -64,20 +95,30 @@ func getTweetsfromUser(userID string, destination string) {
 			break
 		}
 	}
+
+	_, err := exec.Command("rm", Path+"raw.json").Output()
+	if err != nil {
+		fmt.Println("> Error deleting " + Path + "raw.json" + ": " + err.Error())
+		return
+	}
+
 }
 
-func writeTweetToFile(tweet map[string]interface{}, file string, comma string) {
+/**
+ * Append a tweet to the given file
+ */
+func appendTweetToFile(tweet map[string]interface{}, file string, comma string) {
 	bytes, _ := json.Marshal(tweet)
 
 	f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		fmt.Println("> Error storing tweet in tweets.json: " + err.Error())
+		fmt.Println("> Error storing tweet in " + file + " " + err.Error())
 		return
 	}
 	defer f.Close()
 
 	if _, err = f.WriteString(string(bytes) + comma); err != nil {
-		fmt.Println("> Error storing tweet in tweets.json: " + err.Error())
+		fmt.Println("> Error storing tweet in " + file + " " + err.Error())
 	}
 }
 
