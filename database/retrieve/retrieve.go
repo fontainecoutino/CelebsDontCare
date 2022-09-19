@@ -21,6 +21,7 @@ func GetData() {
 }
 
 /**
+ * TODO: Update so that it stores the latest tweets based on oldest_id
  *  The format of the file after the function is as follows. The tweets are
  *  stored to keep only the text and date of creation. Each tweet in the file is stored as a map
  * 	and a comma is added after wards. This is true for every tweet; which means that the function
@@ -152,7 +153,8 @@ func getTweetsfromUser(userID string, tempFile string) string {
 }
 
 /**
- * Append a tweet to the given file
+ * Append a tweet to the given file. If a comma is added, it will wrie it to
+ * the file.
  */
 func appendTweetToFile(tweet map[string]interface{}, file string, comma string) {
 	bytes, _ := json.Marshal(tweet)
@@ -168,7 +170,3 @@ func appendTweetToFile(tweet map[string]interface{}, file string, comma string) 
 		fmt.Println("> Error storing tweet in " + file + " " + err.Error())
 	}
 }
-
-/**
- * read tweets.json to get trip information and store in trips.json
- */
