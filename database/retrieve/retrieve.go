@@ -1,15 +1,21 @@
 package retrieve
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 const Path = "./database/retrieve/"
+
+type UserTweets struct {
+	User_id         string
+	Oldest_tweet_id string
+	Tweets          []map[string]interface{}
+}
 
 /**
  *  Given an userID, gets all of their tweets. The tweets are stored in the file
@@ -29,62 +35,16 @@ func GetData() {
  *  all current tweets from TwitterUserID and store in tweets.json
  */
 func writeTweetsToFile(userID string, destination string) {
-	tempFile := Path + "tempTweets.json"
-
-	oldestID := getTweetsfromUser(userID, tempFile)
-
-	outfile, err := os.Create(destination)
-	if err != nil {
-		fmt.Println("> Error creating " + destination + ": " + err.Error())
-		return
-	}
-	defer outfile.Close()
-
-	// add beggining of json object
-	usrSting := "\"user_id\": \"" + userID + "\",\n"
-	oldestSting := "\"oldest_tweet_id\": \"" + oldestID + "\",\n"
-	tweetsString := "\"tweets\":[\n"
-	_, err = outfile.WriteString("{ " + usrSting + oldestSting + tweetsString)
-	if err != nil {
-		fmt.Println("> Error writing to " + destination + ": " + err.Error())
-		return
+	allTweets, oldestID := getTweetsfromUser(userID)
+	userTweets := UserTweets{
+		User_id:         userID,
+		Oldest_tweet_id: oldestID,
+		Tweets:          allTweets,
 	}
 
-	// write contents from tmp to desination file
-	f, err := os.Open(tempFile)
-	if err != nil {
-		fmt.Println("> Error opening " + tempFile + ": " + err.Error())
-		return
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		_, err = outfile.WriteString(scanner.Text() + "\n")
-		if err != nil {
-			fmt.Println("> Error writing to " + destination + ": " + err.Error())
-			return
-		}
-	}
-
-	// write end of file to finish object
-	_, err = outfile.WriteString("]}")
-	if err != nil {
-		fmt.Println("> Error writing to " + destination + ": " + err.Error())
-		return
-	}
-
-	// ensure all lines are written
-	outfile.Sync()
-	outfile.Close()
-	f.Close()
-
-	// gets rid of file since there is no use for it anymore
-	_, err = exec.Command("rm", tempFile).Output()
-	if err != nil {
-		fmt.Println("> Error deleting " + tempFile + ": " + err.Error())
-		return
-	}
+	bytes, _ := json.MarshalIndent(userTweets, "", " ")
+	err := ioutil.WriteFile(destination, bytes, 0644)
+	check(err, true, "> Error writing to "+destination+": ")
 
 	fmt.Println("> Done writing tweets to " + destination)
 }
@@ -96,77 +56,61 @@ func writeTweetsToFile(userID string, destination string) {
  *  will produce a file that is not in json format. This should be fixed by the caller.
  *  all current tweets from TwitterUserID and store in tweets.json
  */
-func getTweetsfromUser(userID string, tempFile string) string {
-	nextToken := ""
-	oldestID := ""
+func getTweetsfromUser(userID string) ([]map[string]interface{}, string) {
+	var tripLogTweets []map[string]interface{}
+	var oldestID string
+	var nextToken string
 	for {
-		// executes command to get data and stores it in database/retrieve/raw.json
-		prg := Path + "retrieve"
-		_, err := exec.Command("bash", prg, userID, nextToken).Output()
-		if err != nil {
-			fmt.Println("> Error executing bash command: " + err.Error())
-			return oldestID
-		}
-
-		// gets raw data from file
-		rawDataFile, _ := os.Open(Path + "raw.json")
-		rawData, err := ioutil.ReadAll(rawDataFile)
-		if err != nil {
-			fmt.Println("> Error tranformig " + Path + "raw.json" + " to []byte: " + err.Error())
-		}
-		rawDataFile.Close()
-
 		// gets all tweets and appends them to temp file
 		var data map[string]interface{}
-		json.Unmarshal(rawData, &data)
+		json.Unmarshal(getRawData(userID, nextToken), &data)
 
 		currentTweets := data["data"].([]interface{})
 		metaData := data["meta"].(map[string]interface{})
-		breakLoopFlag := false
-		for index, tweet := range currentTweets {
-			tweet := tweet.(map[string]interface{})
-			oldestID = metaData["oldest_id"].(string)
-			delete(tweet, "id")
 
-			if token, ok := metaData["next_token"].(string); ok {
-				nextToken = token
-				appendTweetToFile(tweet, tempFile, ",")
-			} else if index != len(currentTweets)-1 {
-				appendTweetToFile(tweet, tempFile, ",")
-			} else {
-				appendTweetToFile(tweet, tempFile, "")
-				breakLoopFlag = true
+		// append tweets only if a trip log
+		for _, tweet := range currentTweets {
+			tweet := tweet.(map[string]interface{})
+			if strings.Contains(tweet["text"].(string), "gallons") &&
+				strings.Contains(tweet["text"].(string), "CO2 emissions") {
+				oldestID = metaData["oldest_id"].(string)
+				tripLogTweets = append(tripLogTweets, tweet)
 			}
 		}
-		if breakLoopFlag {
+
+		token, ok := metaData["next_token"].(string)
+		if !ok {
 			break
 		}
+		nextToken = token
 	}
 
 	// gets rid of file since there is no use for it anymore
 	_, err := exec.Command("rm", Path+"raw.json").Output()
-	if err != nil {
-		fmt.Println("> Error deleting " + Path + "raw.json" + ": " + err.Error())
-		return oldestID
-	}
-	return oldestID
+	check(err, false, "> Error deleting "+Path+"raw.json"+": ")
+	return tripLogTweets, oldestID
 }
 
-/**
- * Append a tweet to the given file. If a comma is added, it will wrie it to
- * the file.
- */
-func appendTweetToFile(tweet map[string]interface{}, file string, comma string) {
-	bytes, _ := json.Marshal(tweet)
+func getRawData(userID string, nextToken string) []byte {
+	// executes command to get data and stores it in database/retrieve/raw.json
+	prg := Path + "retrieve"
+	_, err := exec.Command("bash", prg, userID, nextToken).Output()
+	check(err, false, "> Error executing bash command: ")
 
-	f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	// gets raw data from file
+	rawDataFile, _ := os.Open(Path + "raw.json")
+	rawData, err := ioutil.ReadAll(rawDataFile)
+	check(err, false, "> Error tranformig "+Path+"raw.json"+" to []byte: ")
+	rawDataFile.Close()
+
+	return rawData
+}
+
+func check(err error, panicCheck bool, msg string) {
 	if err != nil {
-		fmt.Println("> Error storing tweet in " + file + " " + err.Error())
-		return
-	}
-	defer f.Close()
-
-	if _, err = f.WriteString(string(bytes) + comma + "\n"); err != nil {
-		fmt.Println("> Error storing tweet in " + file + " " + err.Error())
+		fmt.Println(msg + err.Error())
+		if panicCheck {
+			panic(err)
+		}
 	}
 }
