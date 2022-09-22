@@ -91,6 +91,9 @@ func getTweetsfromUser(userID string) ([]map[string]interface{}, string) {
 	return tripLogTweets, oldestID
 }
 
+/**
+ * Executes bash command to get 100 tweets from userID and store in raw.json.
+ */
 func getRawData(userID string, nextToken string) []byte {
 	// executes command to get data and stores it in database/retrieve/raw.json
 	prg := Path + "retrieve"
@@ -106,6 +109,9 @@ func getRawData(userID string, nextToken string) []byte {
 	return rawData
 }
 
+/**
+ * Checks for an error. Displays message and panics if needed.
+ */
 func check(err error, panicCheck bool, msg string) {
 	if err != nil {
 		fmt.Println(msg + err.Error())
