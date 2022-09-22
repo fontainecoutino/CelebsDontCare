@@ -1,24 +1,22 @@
 package trip
 
 import (
+	"context"
 	"database/sql"
-	"fmt"
 	"log"
+	"time"
 
 	"github.com/fontainecoutino/CelebsDontCare/database"
 )
 
 func getProduct(productID int) (*Trip, error) {
-	stmt := fmt.Sprintf("SELECT * FROM trips WHERE id=%d;", productID)
-	row, err := database.DB.Query(stmt)
-	if err != nil {
-		fmt.Println("> failed execution of: " + stmt)
-		panic(err)
-	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	row := database.DB.QueryRowContext(ctx,
+		`SELECT * FROM trips WHERE id = $1`, productID)
 
 	trip := &Trip{}
-	row.Next()
-	err = row.Scan(
+	err := row.Scan(
 		&trip.TripID,
 		&trip.TimeStamp,
 		&trip.UserID,
@@ -36,6 +34,42 @@ func getProduct(productID int) (*Trip, error) {
 		return nil, err
 	}
 	return trip, nil
+}
+
+/*
+func insertProduct(trip Trip) (int, error) {
+
+	s := `INSERT INTO trips
+	(time_stamp, user_id, distance, gallons_used, cost_of_fuel, start_dest, end_dest)
+VALUES
+	(%s, %s, %d, %d, %f, %s, %s);`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	result, err := database.DbConn.ExecContext(ctx, `INSERT INTO products
+	(manufacturer,
+	sku,
+	upc,
+	pricePerUnit,
+	quantityOnHand,
+	productName) VALUES (?, ?, ?, ?, ?, ?)`,
+		product.Manufacturer,
+		product.Sku,
+		product.Upc,
+		product.PricePerUnit,
+		product.QuantityOnHand,
+		product.ProductName)
+
+	if err != nil {
+		log.Println(err.Error())
+		return 0, err
+	}
+	insertID, err := result.LastInsertId()
+	if err != nil {
+		log.Println(err.Error())
+		return 0, err
+	}
+	return int(insertID), nil
 }
 
 /*
@@ -110,33 +144,5 @@ func updateProduct(product Product) error {
 		return err
 	}
 	return nil
-}
-
-func insertProduct(product Product) (int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-	result, err := database.DbConn.ExecContext(ctx, `INSERT INTO products
-	(manufacturer,
-	sku,
-	upc,
-	pricePerUnit,
-	quantityOnHand,
-	productName) VALUES (?, ?, ?, ?, ?, ?)`,
-		product.Manufacturer,
-		product.Sku,
-		product.Upc,
-		product.PricePerUnit,
-		product.QuantityOnHand,
-		product.ProductName)
-	if err != nil {
-		log.Println(err.Error())
-		return 0, err
-	}
-	insertID, err := result.LastInsertId()
-	if err != nil {
-		log.Println(err.Error())
-		return 0, err
-	}
-	return int(insertID), nil
 }
 */
