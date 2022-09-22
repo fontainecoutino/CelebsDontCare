@@ -1,16 +1,29 @@
 package main
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/fontainecoutino/CelebsDontCare/database"
-	"github.com/fontainecoutino/CelebsDontCare/database/retrieve"
+	"github.com/fontainecoutino/CelebsDontCare/trip"
 )
 
-const retrieveNewData = false
+const basePath = "/api"
+
+type Trip struct {
+	TripID      int
+	TimeStamp   string
+	UserID      string
+	Distance    int
+	GallonsUsed int
+	CostOfFuel  float32
+	StartDest   string
+	EndDest     string
+}
 
 func main() {
-	// get the data from twitter in order to store in DB
-	if retrieveNewData {
-		retrieve.GetData()
-	}
-	database.Main()
+	database.SetupDatabase()
+	trip.SetupRoutes(basePath)
+	log.Fatal(http.ListenAndServe(":5000", nil))
+
 }

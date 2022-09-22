@@ -6,14 +6,49 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	_ "github.com/lib/pq"
 )
 
-func Main() {
-	fmt.Println("> attempting connection to db")
-	db := openConnection()
-	defer db.Close()
+var DB *sql.DB
+
+func SetupDatabase() {
+	host := os.Getenv("dbhost")
+	port, _ := strconv.Atoi(os.Getenv("dbport"))
+	user := os.Getenv("dbuser")
+	password := os.Getenv("dbpassword")
+	dbname := os.Getenv("dbname")
+
+	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	var err error
+	DB, err = sql.Open("postgres", conn)
+	if err != nil {
+		fmt.Println("> failed connecting to db")
+		panic(err)
+	}
+
+	//DB.SetMaxOpenConns(3)
+	//DB.SetMaxIdleConns(3)
+	//DB.SetConnMaxLifetime(60 * time.Second)
+}
+
+// TODO! Delete function after code is used
+func Test() {
+	// attempt connection to db
+	host := os.Getenv("dbhost")
+	port, _ := strconv.Atoi(os.Getenv("dbport"))
+	user := os.Getenv("dbuser")
+	password := os.Getenv("dbpassword")
+	dbname := os.Getenv("dbname")
+
+	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	db, _ := sql.Open("postgres", conn)
+
+	db.SetMaxOpenConns(3)
+	db.SetMaxIdleConns(3)
+	db.SetConnMaxLifetime(time.Duration(60) * time.Second)
 
 	/*
 		stmt := "INSERT INTO test (num, str) VALUES (4, 'test');"
@@ -43,26 +78,6 @@ func Main() {
 		}
 		fmt.Println("\n", id, "\t\t", num, "\t\t", name)
 	}
-
-	fmt.Println("> closing connection to db")
-}
-
-func openConnection() *sql.DB {
-	host := os.Getenv("dbhost")
-	port, _ := strconv.Atoi(os.Getenv("dbport"))
-	user := os.Getenv("dbuser")
-	password := os.Getenv("dbpassword")
-	dbname := os.Getenv("dbname")
-
-	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-
-	db, err := sql.Open("postgres", conn)
-	if err != nil {
-		fmt.Println("> failed connecting to db")
-		panic(err)
-	}
-	fmt.Println("> succeded connecting to db")
-	return db
 }
 
 /*
