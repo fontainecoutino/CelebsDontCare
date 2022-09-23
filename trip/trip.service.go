@@ -12,6 +12,18 @@ import (
 
 const tripsPath = "trips"
 
+// SetupRoutes
+func SetupRoutes(apiBasePath string) {
+	tripHandler := http.HandlerFunc(handleTrip)
+	tripHandlerPath := apiBasePath + "/" + tripsPath + "/"
+
+	tripsHandler := http.HandlerFunc(handleTrips)
+	tripsHandlerPath := apiBasePath + "/" + tripsPath
+
+	http.Handle(tripHandlerPath, cors.Middleware(tripHandler))
+	http.Handle(tripsHandlerPath, cors.Middleware(tripsHandler))
+}
+
 func handleTrip(w http.ResponseWriter, r *http.Request) {
 	// get segments
 	urlPathSegments := strings.Split(r.URL.Path, tripsPath+"/")
@@ -89,14 +101,46 @@ func handleTrip(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// SetupRoutes
-func SetupRoutes(apiBasePath string) {
-	tripHandler := http.HandlerFunc(handleTrip)
-	tripHandlerPath := apiBasePath + "/" + tripsPath + "/"
+func handleTrips(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	/*
+		// GET
+		case http.MethodGet:
+			productList, err := getProductList()
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			j, err := json.Marshal(productList)
+			if err != nil {
+				log.Fatal(err)
+			}
+			_, err = w.Write(j)
+			if err != nil {
+				log.Fatal(err)
+			}
+	*/
+	// POST
+	case http.MethodPost:
+		var trip Trip
+		err := json.NewDecoder(r.Body).Decode(&trip)
+		if err != nil {
+			log.Print(err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		err = insertTrip(trip)
+		if err != nil {
+			log.Print(err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
 
-	//tripsHandler := http.HandlerFunc(handleProducts)
-	//tripsHandlerPath := apiBasePath + "/" + tripsPath
+	case http.MethodOptions:
+		return
 
-	http.Handle(tripHandlerPath, cors.Middleware(tripHandler))
-	//http.Handle(tripsHandlerPath, cors.Middleware(tripsHandler))
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
 }

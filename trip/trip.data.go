@@ -36,40 +36,27 @@ func getProduct(productID int) (*Trip, error) {
 	return trip, nil
 }
 
-/*
-func insertProduct(trip Trip) (int, error) {
-
-	s := `INSERT INTO trips
-	(time_stamp, user_id, distance, gallons_used, cost_of_fuel, start_dest, end_dest)
-VALUES
-	(%s, %s, %d, %d, %f, %s, %s);`
-
+func insertTrip(trip Trip) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	result, err := database.DbConn.ExecContext(ctx, `INSERT INTO products
-	(manufacturer,
-	sku,
-	upc,
-	pricePerUnit,
-	quantityOnHand,
-	productName) VALUES (?, ?, ?, ?, ?, ?)`,
-		product.Manufacturer,
-		product.Sku,
-		product.Upc,
-		product.PricePerUnit,
-		product.QuantityOnHand,
-		product.ProductName)
+	_, err := database.DB.ExecContext(ctx,
+		`INSERT INTO trips
+		(time_stamp, user_id, distance, gallons_used, 
+			cost_of_fuel, start_dest, end_dest) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		trip.TimeStamp,
+		trip.UserID,
+		trip.Distance,
+		trip.GallonsUsed,
+		trip.CostOfFuel,
+		trip.StartDest,
+		trip.EndDest)
 
 	if err != nil {
 		log.Println(err.Error())
-		return 0, err
+		return err
 	}
-	insertID, err := result.LastInsertId()
-	if err != nil {
-		log.Println(err.Error())
-		return 0, err
-	}
-	return int(insertID), nil
+	return nil
 }
 
 /*
