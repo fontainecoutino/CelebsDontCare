@@ -12,6 +12,10 @@ import (
 const basePath = "/api"
 
 func main() {
+	setUp()
+}
+
+func setUp() {
 	database.SetupDatabase()
 	trip.SetupRoutes(basePath)
 	user.SetupRoutes(basePath)
