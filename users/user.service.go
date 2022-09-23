@@ -1,4 +1,4 @@
-package trip
+package user
 
 import (
 	"encoding/json"
@@ -10,29 +10,29 @@ import (
 	"github.com/fontainecoutino/CelebsDontCare/cors"
 )
 
-const tripsPath = "trips"
+const usersPath = "users"
 
 // SetupRoutes
 func SetupRoutes(apiBasePath string) {
-	tripHandler := http.HandlerFunc(handleTrip)
-	tripHandlerPath := apiBasePath + "/" + tripsPath + "/"
-	http.Handle(tripHandlerPath, cors.Middleware(tripHandler))
+	userHandler := http.HandlerFunc(handleUser)
+	userHandlerPath := apiBasePath + "/" + usersPath + "/"
+	http.Handle(userHandlerPath, cors.Middleware(userHandler))
 
-	tripsHandler := http.HandlerFunc(handleTrips)
-	tripsHandlerPath := apiBasePath + "/" + tripsPath
-	http.Handle(tripsHandlerPath, cors.Middleware(tripsHandler))
+	usersHandler := http.HandlerFunc(handleUsers)
+	usersHandlerPath := apiBasePath + "/" + usersPath
+	http.Handle(usersHandlerPath, cors.Middleware(usersHandler))
 }
 
-func handleTrip(w http.ResponseWriter, r *http.Request) {
+func handleUser(w http.ResponseWriter, r *http.Request) {
 	// get segments
-	urlPathSegments := strings.Split(r.URL.Path, tripsPath+"/")
+	urlPathSegments := strings.Split(r.URL.Path, usersPath+"/")
 	if len(urlPathSegments[1:]) > 1 {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// get tripID
-	tripID, err := strconv.Atoi(urlPathSegments[len(urlPathSegments)-1])
+	// get userID
+	userID, err := strconv.Atoi(urlPathSegments[len(urlPathSegments)-1])
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusNotFound)
@@ -42,7 +42,7 @@ func handleTrip(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	// GET
 	case http.MethodGet:
-		product, err := getTrip(tripID)
+		product, err := getUser(userID)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -64,7 +64,7 @@ func handleTrip(w http.ResponseWriter, r *http.Request) {
 
 	// DELETE
 	case http.MethodDelete:
-		err := removeTrip(tripID)
+		err := removeUser(userID)
 		if err != nil {
 			log.Print(err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -79,16 +79,16 @@ func handleTrip(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleTrips(w http.ResponseWriter, r *http.Request) {
+func handleUsers(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	// GET
 	case http.MethodGet:
-		tripList, err := getTripList()
+		userList, err := getUserList()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		j, err := json.Marshal(tripList)
+		j, err := json.Marshal(userList)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -99,14 +99,14 @@ func handleTrips(w http.ResponseWriter, r *http.Request) {
 
 	// POST
 	case http.MethodPost:
-		var trip Trip
-		err := json.NewDecoder(r.Body).Decode(&trip)
+		var user User
+		err := json.NewDecoder(r.Body).Decode(&user)
 		if err != nil {
 			log.Print(err)
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		err = insertTrip(trip)
+		err = insertUser(user)
 		if err != nil {
 			log.Print(err)
 			w.WriteHeader(http.StatusBadRequest)

@@ -1,4 +1,4 @@
-package trip
+package user
 
 import (
 	"context"
@@ -9,23 +9,14 @@ import (
 	"github.com/fontainecoutino/CelebsDontCare/database"
 )
 
-func getTrip(tripID int) (*Trip, error) {
+func getUser(userID int) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	row := database.DB.QueryRowContext(ctx,
-		`SELECT * FROM trips WHERE id = $1`, tripID)
+		`SELECT * FROM users WHERE id = $1`, userID)
 
-	trip := &Trip{}
-	err := row.Scan(
-		&trip.TripID,
-		&trip.TimeStamp,
-		&trip.UserID,
-		&trip.Distance,
-		&trip.GallonsUsed,
-		&trip.CostOfFuel,
-		&trip.StartDest,
-		&trip.EndDest,
-	)
+	user := &User{}
+	err := row.Scan(&user.UserID, &user.Name)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -33,51 +24,39 @@ func getTrip(tripID int) (*Trip, error) {
 		log.Println(err)
 		return nil, err
 	}
-	return trip, nil
+	return user, nil
 }
 
-func getTripList() ([]Trip, error) {
+func getUserList() ([]User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	results, err := database.DB.QueryContext(ctx, `SELECT * FROM trips `)
+	results, err := database.DB.QueryContext(ctx, `SELECT * FROM users `)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
 	}
 	defer results.Close()
-	trips := make([]Trip, 0)
+	users := make([]User, 0)
 	for results.Next() {
-		var trip Trip
+		var user User
 		results.Scan(
-			&trip.TripID,
-			&trip.TimeStamp,
-			&trip.UserID,
-			&trip.Distance,
-			&trip.GallonsUsed,
-			&trip.CostOfFuel,
-			&trip.StartDest,
-			&trip.EndDest)
+			&user.UserID,
+			&user.Name)
 
-		trips = append(trips, trip)
+		users = append(users, user)
 	}
-	return trips, nil
+	return users, nil
 }
 
-func insertTrip(trip Trip) error {
+func insertUser(user User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	_, err := database.DB.ExecContext(ctx,
-		`INSERT INTO trips
+		`INSERT INTO users
 		(time_stamp, user_id, distance, gallons_used, 
 			cost_of_fuel, start_dest, end_dest) 
 		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-		trip.TimeStamp,
-		trip.UserID,
-		trip.Distance,
-		trip.GallonsUsed,
-		trip.CostOfFuel,
-		trip.StartDest,
-		trip.EndDest)
+		user.Name)
 
 	if err != nil {
 		log.Println(err.Error())
@@ -86,11 +65,11 @@ func insertTrip(trip Trip) error {
 	return nil
 }
 
-func removeTrip(productID int) error {
+func removeUser(productID int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	_, err := database.DB.ExecContext(ctx,
-		`DELETE FROM trips where id = $1`, productID)
+		`DELETE FROM users where id = $1`, productID)
 	if err != nil {
 		log.Println(err.Error())
 		return err
