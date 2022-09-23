@@ -16,11 +16,10 @@ const tripsPath = "trips"
 func SetupRoutes(apiBasePath string) {
 	tripHandler := http.HandlerFunc(handleTrip)
 	tripHandlerPath := apiBasePath + "/" + tripsPath + "/"
+	http.Handle(tripHandlerPath, cors.Middleware(tripHandler))
 
 	tripsHandler := http.HandlerFunc(handleTrips)
 	tripsHandlerPath := apiBasePath + "/" + tripsPath
-
-	http.Handle(tripHandlerPath, cors.Middleware(tripHandler))
 	http.Handle(tripsHandlerPath, cors.Middleware(tripsHandler))
 }
 
@@ -63,36 +62,15 @@ func handleTrip(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		/*
-			// PUT
-			case http.MethodPut:
-				var product Product
-				err := json.NewDecoder(r.Body).Decode(&product)
-				if err != nil {
-					log.Print(err)
-					w.WriteHeader(http.StatusBadRequest)
-					return
-				}
-				if *product.ProductID != productID {
-					w.WriteHeader(http.StatusBadRequest)
-					return
-				}
-				err = updateProduct(product)
-				if err != nil {
-					log.Print(err)
-					w.WriteHeader(http.StatusBadRequest)
-					return
-				}
+	// DELETE
+	case http.MethodDelete:
+		err := removeTrip(tripID)
+		if err != nil {
+			log.Print(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 
-			// DELETE
-			case http.MethodDelete:
-				err := removeProduct(productID)
-				if err != nil {
-					log.Print(err)
-					w.WriteHeader(http.StatusInternalServerError)
-					return
-				}
-		*/
 	case http.MethodOptions:
 		return
 
@@ -103,23 +81,22 @@ func handleTrip(w http.ResponseWriter, r *http.Request) {
 
 func handleTrips(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	/*
-		// GET
-		case http.MethodGet:
-			productList, err := getProductList()
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			j, err := json.Marshal(productList)
-			if err != nil {
-				log.Fatal(err)
-			}
-			_, err = w.Write(j)
-			if err != nil {
-				log.Fatal(err)
-			}
-	*/
+	// GET
+	case http.MethodGet:
+		tripList, err := getTripList()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		j, err := json.Marshal(tripList)
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = w.Write(j)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 	// POST
 	case http.MethodPost:
 		var trip Trip

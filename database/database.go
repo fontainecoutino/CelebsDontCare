@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -29,55 +28,9 @@ func SetupDatabase() {
 		panic(err)
 	}
 
-	//DB.SetMaxOpenConns(3)
-	//DB.SetMaxIdleConns(3)
-	//DB.SetConnMaxLifetime(60 * time.Second)
-}
-
-// TODO! Delete function after code is used
-func Test() {
-	// attempt connection to db
-	host := os.Getenv("dbhost")
-	port, _ := strconv.Atoi(os.Getenv("dbport"))
-	user := os.Getenv("dbuser")
-	password := os.Getenv("dbpassword")
-	dbname := os.Getenv("dbname")
-
-	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	db, _ := sql.Open("postgres", conn)
-
-	db.SetMaxOpenConns(3)
-	db.SetMaxIdleConns(3)
-	db.SetConnMaxLifetime(time.Duration(60) * time.Second)
-
-	/*
-		stmt := "INSERT INTO test (num, str) VALUES (4, 'test');"
-		fmt.Println("> attempting execution of: " + stmt)
-		_, err := db.Exec(stmt)
-		if err != nil {
-			fmt.Println("> failed execution of: " + stmt)
-			panic(err)
-		}
-	*/
-
-	stmt1 := "SELECT * FROM test;"
-	fmt.Println("> attempting execution of: " + stmt1)
-	rows, err := db.Query(stmt1)
-	if err != nil {
-		fmt.Println("> failed execution of: " + stmt1)
-		panic(err)
-	}
-
-	var id int
-	var num int
-	var name string
-	for rows.Next() {
-		err := rows.Scan(&id, &num, &name)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("\n", id, "\t\t", num, "\t\t", name)
-	}
+	DB.SetMaxOpenConns(3)
+	DB.SetMaxIdleConns(3)
+	DB.SetConnMaxLifetime(60 * time.Second)
 }
 
 /*
