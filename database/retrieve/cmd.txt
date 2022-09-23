@@ -1,1 +1,0 @@
-curl -H "Authorization: Bearer AAAAAAAAAAAAAAAAAAAAAG51hAEAAAAAsck3v8QSQo%2BVeiZoSE2b3JSqdy8%3DpeKXanU2xKFDbc9uvk8pC47EoB1Bkiv1IKwCNXJdo91wSYTax4" "https://api.twitter.com/2/users/1450174360346574850/tweets?max_results=100" > tweets.json
