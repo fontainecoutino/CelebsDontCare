@@ -52,11 +52,7 @@ func insertUser(user User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	_, err := database.DB.ExecContext(ctx,
-		`INSERT INTO users
-		(time_stamp, user_id, distance, gallons_used, 
-			cost_of_fuel, start_dest, end_dest) 
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-		user.Name)
+		`INSERT INTO users (name) VALUES ($1)`, user.Name)
 
 	if err != nil {
 		log.Println(err.Error())
