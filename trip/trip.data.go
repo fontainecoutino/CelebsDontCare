@@ -19,12 +19,11 @@ func getTrip(tripID int) (*Trip, error) {
 	err := row.Scan(
 		&trip.TripID,
 		&trip.TimeStamp,
-		&trip.UserID,
+		&trip.Name,
 		&trip.Distance,
 		&trip.GallonsUsed,
 		&trip.CostOfFuel,
-		&trip.StartDest,
-		&trip.EndDest,
+		&trip.Flight,
 	)
 
 	if err == sql.ErrNoRows {
@@ -51,12 +50,11 @@ func getTripList() ([]Trip, error) {
 		results.Scan(
 			&trip.TripID,
 			&trip.TimeStamp,
-			&trip.UserID,
+			&trip.Name,
 			&trip.Distance,
 			&trip.GallonsUsed,
 			&trip.CostOfFuel,
-			&trip.StartDest,
-			&trip.EndDest)
+			&trip.Flight)
 
 		trips = append(trips, trip)
 	}
@@ -68,16 +66,14 @@ func insertTrip(trip Trip) error {
 	defer cancel()
 	_, err := database.DB.ExecContext(ctx,
 		`INSERT INTO trips
-		(time_stamp, user_id, distance, gallons_used, 
-			cost_of_fuel, start_dest, end_dest) 
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		(time_stamp, name, distance, gallons_used, cost_of_fuel, flight) 
+		VALUES ($1, $2, $3, $4, $5, $6)`,
 		trip.TimeStamp,
-		trip.UserID,
+		trip.Name,
 		trip.Distance,
 		trip.GallonsUsed,
 		trip.CostOfFuel,
-		trip.StartDest,
-		trip.EndDest)
+		trip.Flight)
 
 	if err != nil {
 		log.Println(err.Error())

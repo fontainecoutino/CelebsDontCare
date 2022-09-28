@@ -1,17 +1,25 @@
-CREATE TABLE users (
-	id 	 SERIAL PRIMARY KEY,
-	name VARCHAR(255) UNIQUE
-);
-
+-- trips made by users
 CREATE TABLE trips (
 	id 			 SERIAL PRIMARY KEY,
 	time_stamp 	 TIMESTAMPTZ,
-	user_id		 INTEGER REFERENCES users(id),
-	distance 	 INTEGER,
-	gallons_used INTEGER,
-	cost_of_fuel FLOAT,
-	start_dest 	 VARCHAR(255),
-	end_dest 	 VARCHAR(255),
+	name		 VARCHAR(255),
+	distance 	 INTEGER CHECK (distance >= 0),
+	gallons_used INTEGER CHECK (gallons_used >= 0),
+	cost_of_fuel INTEGER CHECK (cost_of_fuel >= 0),
+	flight 	 VARCHAR(255),
 
-	unique(user_id, time_stamp)
+	unique(name, time_stamp)
+);
+
+-- For storage
+CREATE TABLE twitter_sources (
+	twitter_id 	  INTEGER PRIMARY KEY,
+	username 	  VARCHAR(50),
+	last_tweet_id VARCHAR(255)
+);
+
+CREATE TABLE new_trip_log (
+	id 		   SERIAL PRIMARY KEY,
+	time_stamp TIMESTAMPTZ,
+	log 	   JSON NOT NULL
 );
