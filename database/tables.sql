@@ -15,8 +15,7 @@ CREATE TABLE trips (
 CREATE TABLE twitter_sources (
 	twitter_id 	  	VARCHAR(255) PRIMARY KEY,
 	username 	  	VARCHAR(50),
-	last_tweet_id 	VARCHAR(255),
-	individual_name VARCHAR(255)
+	last_tweet_id 	VARCHAR(255)
 );
 
 CREATE TABLE new_trip_log (
