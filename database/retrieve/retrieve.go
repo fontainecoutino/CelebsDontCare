@@ -2,8 +2,12 @@ package retrieve
 
 const Path = "./database/retrieve/"
 
-type UserTweets struct {
-	User_id         string                   `json:"user_id"`
-	Oldest_tweet_id string                   `json:"oldest_tweet_id"`
-	Tweets          []map[string]interface{} `json:"tweets"`
+type Twitter_Source struct {
+	Twitter_id    string
+	Username      string
+	Last_tweet_id string
+}
+
+type Tweets struct {
+	Tweets []map[string]interface{} `json:tweets`
 }

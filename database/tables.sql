@@ -13,7 +13,7 @@ CREATE TABLE trips (
 
 -- For storage
 CREATE TABLE twitter_sources (
-	twitter_id 	  INTEGER PRIMARY KEY,
+	twitter_id 	  VARCHAR(255) PRIMARY KEY,
 	username 	  VARCHAR(50),
 	last_tweet_id VARCHAR(255)
 );

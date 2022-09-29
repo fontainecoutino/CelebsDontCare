@@ -1,23 +1,67 @@
 package retrieve
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
+	"time"
+
+	"github.com/fontainecoutino/CelebsDontCare/database"
+	"github.com/fontainecoutino/CelebsDontCare/trip"
+	_ "github.com/fontainecoutino/CelebsDontCare/trip"
 )
+
+const URL = "http://localhost:5000/api/"
 
 /**
  *  Given an userID, gets all of their tweets. The tweets are stored in the file
  *  tweets.json. The tweets are stored to keep only the text and date of creation.
  */
 func getData(source string) (int, error) {
-	userID := "1450174360346574850" // @CelebJets
-	writeTweetsToFile(userID, Path+"tweets.json")
+	var newTrips int
+	var err error
+	if source == "twitter" {
+		// get all possible sources
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+		results, err := database.DB.QueryContext(ctx, `SELECT * FROM twitter_sources `)
+		if err != nil {
+			log.Println(err.Error())
+			return 0, err
+		}
+		defer results.Close()
 
-	return 0, nil
+		sources := make([]Twitter_Source, 0)
+		for results.Next() {
+			var source Twitter_Source
+			results.Scan(
+				&source.Twitter_id,
+				&source.Username,
+				&source.Last_tweet_id)
+
+			sources = append(sources, source)
+		}
+
+		// for all users write to data base
+		var nt int
+		for _, source := range sources {
+			nt, err = writeTweetsToDatabase(source, Path+"tweets.json")
+			newTrips += nt
+			if err != nil {
+				return newTrips, err
+			}
+		}
+	}
+	// userID := "1450174360346574850" // @CelebJets
+	return newTrips, err
 }
 
 /**
@@ -27,19 +71,95 @@ func getData(source string) (int, error) {
  *  will produce a file that is not in json format. This should be fixed by the caller.
  *  all current tweets from TwitterUserID and store in tweets.json
  */
-func writeTweetsToFile(userID string, destination string) {
-	allTweets, oldestID := getTweetsfromUser(userID)
-	userTweets := UserTweets{
-		User_id:         userID,
-		Oldest_tweet_id: oldestID,
-		Tweets:          allTweets,
+func writeTweetsToDatabase(source Twitter_Source, destination string) (int, error) {
+	allTweets, oldestID := getTweetsfromUser(source.Twitter_id, source.Last_tweet_id)
+
+	// write to trips to database
+	var num int
+	for _, tweet := range allTweets {
+		num += insertTripIntoDatabase(tweet)
 	}
 
-	bytes, _ := json.MarshalIndent(userTweets, "", " ")
-	err := ioutil.WriteFile(destination, bytes, 0644)
-	check(err, true, "> Error writing to "+destination+": ")
+	// update to twitter_sources
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	_, err := database.DB.ExecContext(ctx,
+		`UPDATE twitter_sources SET last_tweet_id = $1 WHERE twitter_id = $2`,
+		oldestID, source.Twitter_id)
 
-	fmt.Println("> Done writing tweets to " + destination)
+	if err != nil {
+		log.Println(err.Error())
+		return num, err
+	}
+
+	// update trip log
+	if allTweets != nil {
+		tweets := &Tweets{}
+		tweets.Tweets = allTweets
+		j, err := json.Marshal(tweets)
+		ctx1, cancel1 := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel1()
+		_, err = database.DB.ExecContext(ctx1, `INSERT INTO new_trip_log (log)  VALUES ($1)`, j)
+
+		if err != nil {
+			log.Println(err.Error())
+			return num, err
+		}
+	}
+
+	return num, nil
+}
+
+func insertTripIntoDatabase(tweet map[string]interface{}) int {
+
+	tripText := strings.Replace(tweet["text"].(string), "\n", "", -1)
+	fmt.Println(tripText)
+	split := strings.Split(tripText, "~")
+
+	for i, info := range split {
+		split[i] = strings.TrimSpace(info)
+	}
+
+	// name
+	name := strings.Split(split[0], "'")[0]
+
+	// destination / mileage
+	var fromTo string
+	var distance int
+	if strings.Contains(split[0], "mile") {
+		fromTo = strings.TrimSpace(strings.Split(split[0], "from")[1])
+		m := strings.Split(strings.TrimSpace(strings.Split(split[0], "mile")[0]), " ")
+		distance, _ = strconv.Atoi(strings.Replace(m[len(m)-1], ",", "", -1))
+	}
+
+	// gallons
+	gallons, _ := strconv.Atoi(strings.Replace(strings.Split(split[1], " ")[0], ",", "", -1))
+
+	// cost
+	cost, _ := strconv.Atoi(strings.Replace(strings.Split(split[3], " ")[0][1:], ",", "", -1))
+
+	newTrip := trip.Trip{
+		TimeStamp:   tweet["created_at"].(string),
+		Name:        name,
+		Distance:    distance,
+		GallonsUsed: gallons,
+		CostOfFuel:  cost,
+		Flight:      fromTo,
+	}
+
+	jsonStr, _ := json.Marshal(newTrip)
+	req, _ := http.NewRequest("POST", URL+"trips", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	defer resp.Body.Close()
+
+	return 1
 }
 
 /**
@@ -49,9 +169,9 @@ func writeTweetsToFile(userID string, destination string) {
  *  will produce a file that is not in json format. This should be fixed by the caller.
  *  all current tweets from TwitterUserID and store in tweets.json
  */
-func getTweetsfromUser(userID string) ([]map[string]interface{}, string) {
+func getTweetsfromUser(userID string, lastTweetID string) ([]map[string]interface{}, string) {
 	var tripLogTweets []map[string]interface{}
-	var oldestID string
+	oldestID := lastTweetID
 	var nextToken string
 	for {
 		// gets all tweets and appends them to temp file
@@ -62,17 +182,32 @@ func getTweetsfromUser(userID string) ([]map[string]interface{}, string) {
 		metaData := data["meta"].(map[string]interface{})
 
 		// append tweets only if a trip log
+		lastTweetReached := false
 		for _, tweet := range currentTweets {
 			tweet := tweet.(map[string]interface{})
+			if tweet["id"].(string) == lastTweetID {
+				lastTweetReached = true
+				break
+			}
 			if strings.Contains(tweet["text"].(string), "gallons") &&
 				strings.Contains(tweet["text"].(string), "CO2 emissions") {
-				oldestID = metaData["oldest_id"].(string)
+
+				oid, _ := strconv.Atoi(oldestID)
+				tid, _ := strconv.Atoi(tweet["id"].(string))
+				if tid > oid {
+					oldestID = tweet["id"].(string)
+				}
+
 				tripLogTweets = append(tripLogTweets, tweet)
 			}
 		}
 
-		token, ok := metaData["next_token"].(string)
-		if !ok {
+		if lastTweetReached {
+			break
+		}
+
+		token, tokenExists := metaData["next_token"].(string)
+		if !tokenExists {
 			break
 		}
 		nextToken = token
@@ -80,7 +215,7 @@ func getTweetsfromUser(userID string) ([]map[string]interface{}, string) {
 
 	// gets rid of file since there is no use for it anymore
 	_, err := exec.Command("rm", Path+"raw.json").Output()
-	check(err, false, "> Error deleting "+Path+"raw.json"+": ")
+	check(err, "> Error deleting "+Path+"raw.json"+": ")
 	return tripLogTweets, oldestID
 }
 
@@ -91,12 +226,12 @@ func getRawData(userID string, nextToken string) []byte {
 	// executes command to get data and stores it in database/retrieve/raw.json
 	prg := Path + "retrieve"
 	_, err := exec.Command("bash", prg, userID, nextToken).Output()
-	check(err, false, "> Error executing bash command: ")
+	check(err, "> Error executing bash command: ")
 
 	// gets raw data from file
 	rawDataFile, _ := os.Open(Path + "raw.json")
 	rawData, err := ioutil.ReadAll(rawDataFile)
-	check(err, false, "> Error tranformig "+Path+"raw.json"+" to []byte: ")
+	check(err, "> Error tranformig "+Path+"raw.json"+" to []byte: ")
 	rawDataFile.Close()
 
 	return rawData
@@ -105,11 +240,8 @@ func getRawData(userID string, nextToken string) []byte {
 /**
  * Checks for an error. Displays message and panics if needed.
  */
-func check(err error, panicCheck bool, msg string) {
+func check(err error, msg string) {
 	if err != nil {
 		fmt.Println(msg + err.Error())
-		if panicCheck {
-			panic(err)
-		}
 	}
 }

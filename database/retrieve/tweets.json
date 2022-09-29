@@ -1,7 +1,112 @@
 {
- "User_id": "1450174360346574850",
- "Oldest_tweet_id": "1502836510906802176",
- "Tweets": [
+ "user_id": "1450174360346574850",
+ "oldest_tweet_id": "1504649549767487495",
+ "tweets": [
+  {
+   "created_at": "2022-09-26T21:25:41.000Z",
+   "id": "1574510544874536961",
+   "text": "Puma/Jay-Z's Jet 190 mile (165 NM) flight from BOS to TEB\n \n~ 387 gallons (1,464 liters). \n~ 2,592 lbs (1,176 kg) of jet fuel used. \n~ $2,510 cost of fuel. \n~ 4 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-26T19:20:34.000Z",
+   "id": "1574479056841719821",
+   "text": "Puma/Jay-Z's Jet 3,839 mile (3,336 NM) flight from LIN to BOS\n \n~ 3,578 gallons (13,543 liters). \n~ 23,978 lbs (10,876 kg) of jet fuel used. \n~ $23,220 cost of fuel. \n~ 38 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-26T06:41:51.000Z",
+   "id": "1574288120266326017",
+   "text": "A-Rod's Jet 1,090 mile (947 NM) flight from TEB to OPF\n \n~ 1,191 gallons (4,507 liters). \n~ 7,979 lbs (3,619 kg) of jet fuel used. \n~ $7,727 cost of fuel. \n~ 13 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-26T04:20:54.000Z",
+   "id": "1574252650190848000",
+   "text": "Kylie Jenner's Jet 140 mile (121 NM) flight from TRM to VNY\n \n~ 307 gallons (1,164 liters). \n~ 2,060 lbs (935 kg) of jet fuel used. \n~ $1,995 cost of fuel. \n~ 3 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-25T22:54:40.000Z",
+   "id": "1574170550900994048",
+   "text": "Tiger Wood's Jet 149 mile (129 NM) flight from LEE to SUA\n \n~ 241 gallons (912 liters). \n~ 1,615 lbs (733 kg) of jet fuel used. \n~ $1,564 cost of fuel. \n~ 3 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-25T18:34:13.000Z",
+   "id": "1574105006852214796",
+   "text": "A-Rod's Jet 1,735 mile (1,508 NM) flight from CO03 to TEB\n \n~ 1,569 gallons (5,941 liters). \n~ 10,518 lbs (4,771 kg) of jet fuel used. \n~ $10,185 cost of fuel. \n~ 17 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-25T17:18:38.000Z",
+   "id": "1574085983154356226",
+   "text": "Mark Wahlberg's Jet 220 mile (191 NM) flight from CIA to LDPM\n \n~ 275 gallons (1,042 liters). \n~ 1,845 lbs (837 kg) of jet fuel used. \n~ $1,787 cost of fuel. \n~ 3 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-25T15:49:05.000Z",
+   "id": "1574063449772105729",
+   "text": "Tom Cruise's Challanger 300 923 mile (802 NM) flight from FXE to LUK\n \n~ 602 gallons (2,278 liters). \n~ 4,033 lbs (1,829 kg) of jet fuel used. \n~ $3,905 cost of fuel. \n~ 6 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-25T01:53:02.000Z",
+   "id": "1573853049759612929",
+   "text": "Oprah Winfrey's Jet 709 mile (616 NM) flight from TEX to SBA\n \n~ 708 gallons (2,678 liters). \n~ 4,742 lbs (2,151 kg) of jet fuel used. \n~ $4,592 cost of fuel. \n~ 7 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-24T18:12:28.000Z",
+   "id": "1573737142844538882",
+   "text": "Oprah Winfrey's Jet 709 mile (616 NM) flight from SBA to TEX\n \n~ 666 gallons (2,522 liters). \n~ 4,465 lbs (2,025 kg) of jet fuel used. \n~ $4,323 cost of fuel. \n~ 7 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-24T12:01:00.000Z",
+   "id": "1573643660540973060",
+   "text": "Dan Bilzerian's Jet 4,931 mile (4,285 NM) flight from JMK to CPT\n \n~ 6,509 gallons (24,641 liters). \n~ 43,626 lbs (19,789 kg) of jet fuel used. \n~ $42,246 cost of fuel. \n~ 69 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-24T01:35:43.000Z",
+   "id": "1573486305345937421",
+   "text": "Kylie Jenner's Jet 140 mile (121 NM) flight from VNY to TRM\n \n~ 284 gallons (1,076 liters). \n~ 1,905 lbs (864 kg) of jet fuel used. \n~ $1,848 cost of fuel. \n~ 3 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T23:09:53.000Z",
+   "id": "1573449603894202385",
+   "text": "Kylie Jenner's Jet 35 mile (30 NM) flight from KCMA to VNY\n \n~ 121 gallons (457 liters). \n~ 810 lbs (367 kg) of jet fuel used. \n~ $785 cost of fuel. \n~ 1 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T21:43:42.000Z",
+   "id": "1573427913080422400",
+   "text": "A-Rod's Jet 789 mile (686 NM) flight from SBA to CO03\n \n~ 757 gallons (2,864 liters). \n~ 5,070 lbs (2,300 kg) of jet fuel used. \n~ $4,917 cost of fuel. \n~ 8 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T21:42:56.000Z",
+   "id": "1573427722818314254",
+   "text": "Dan Bilzerian's Jet 84 mile (73 NM) flight from ATH to JMK\n \n~ 159 gallons (600 liters). \n~ 1,063 lbs (482 kg) of jet fuel used. \n~ $1,031 cost of fuel. \n~ 2 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T18:31:03.000Z",
+   "id": "1573379432110325762",
+   "text": "Tiger Wood's Jet 181 mile (157 NM) flight from PBI to LEE\n \n~ 324 gallons (1,226 liters). \n~ 2,170 lbs (984 kg) of jet fuel used. \n~ $2,105 cost of fuel. \n~ 3 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T14:39:57.000Z",
+   "id": "1573321276176867329",
+   "text": "Kim Kardashian's Jet 6,053 mile (5,260 NM) flight from VNY to LIN\n \n~ 5,167 gallons (19,557 liters). \n~ 34,626 lbs (15,706 kg) of jet fuel used. \n~ $33,582 cost of fuel. \n~ 55 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T14:15:03.000Z",
+   "id": "1573315009114947584",
+   "text": "Tiger Wood's Jet 35 mile (31 NM) flight from SUA to PBI\n \n~ 120 gallons (454 liters). \n~ 803 lbs (364 kg) of jet fuel used. \n~ $779 cost of fuel. \n~ 1 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T14:04:56.000Z",
+   "id": "1573312464191688704",
+   "text": "Mark Wahlberg's Jet 259 mile (225 NM) flight from POW to CIA\n \n~ 338 gallons (1,278 liters). \n~ 2,262 lbs (1,026 kg) of jet fuel used. \n~ $2,194 cost of fuel. \n~ 4 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-23T12:46:54.000Z",
+   "id": "1573292825596383232",
+   "text": "Mark Wahlberg's Jet 43 mile (37 NM) flight from PUY to POW\n \n~ 119 gallons (449 liters). \n~ 795 lbs (361 kg) of jet fuel used. \n~ $771 cost of fuel. \n~ 1 tons of CO2 emissions."
+  },
+  {
+   "created_at": "2022-09-22T11:56:30.000Z",
+   "id": "1572917752926445568",
+   "text": "Drake's Jet 343 mile (298 NM) flight from EWR to YHM\n \n~ 1,876 gallons (7,100 liters). \n~ 12,570 lbs (5,702 kg) of jet fuel used. \n~ $12,229 cost of fuel. \n~ 20 tons of CO2 emissions."
+  },
   {
    "created_at": "2022-09-21T20:02:05.000Z",
    "id": "1572677564631482368",
@@ -4666,71 +4771,6 @@
    "created_at": "2022-03-18T02:43:03.000Z",
    "id": "1504649555001978882",
    "text": "Steven Spielberg's Jet 3,449 mile (2,997 NM) flight from LTN to TEB\n ~ 3,680 gallons (13,931 liters). \n~ 24,664 pds (11,187 kg) of jet fuel used. \n~ $20,682 cost of fuel. \n~ 39 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-17T23:40:26.000Z",
-   "id": "1504603596087869449",
-   "text": "Oprah Winfrey's Jet  ~ 81 gallons (305 liters). \n~ 540 pds (245 kg) of jet fuel used. \n~ $453 cost of fuel. \n~ 1 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-17T23:10:51.000Z",
-   "id": "1504596152859217930",
-   "text": "Oprah Winfrey's Jet 709 mile (616 NM) flight from SBA to TEX\n ~ 670 gallons (2,535 liters). \n~ 4,488 pds (2,036 kg) of jet fuel used. \n~ $3,764 cost of fuel. \n~ 7 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-16T23:40:43.000Z",
-   "id": "1504241281848983555",
-   "text": "Mark Wahlberg's Jet 229 mile (199 NM) flight from LAS to VNY\n ~ 393 gallons (1,487 liters). \n~ 2,633 pds (1,194 kg) of jet fuel used. \n~ $2,184 cost of fuel. \n~ 4 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-16T19:06:14.000Z",
-   "id": "1504172206993068038",
-   "text": "Steven Spielberg's Jet 236 mile (205 NM) flight from LBG to LTN\n ~ 413 gallons (1,562 liters). \n~ 2,766 pds (1,255 kg) of jet fuel used. \n~ $2,295 cost of fuel. \n~ 4 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-14T17:04:55.000Z",
-   "id": "1503416897534111756",
-   "text": "Jim Carrey's Jet 940 mile (817 NM) flight from VNY to BFI\n ~ 963 gallons (3,647 liters). \n~ 6,457 pds (2,929 kg) of jet fuel used. \n~ $5,251 cost of fuel. \n~ 10 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-14T15:48:34.000Z",
-   "id": "1503397684425760774",
-   "text": "Steven Spielberg's Jet 224 mile (195 NM) flight from RTM to LBG\n ~ 419 gallons (1,585 liters). \n~ 2,807 pds (1,273 kg) of jet fuel used. \n~ $2,282 cost of fuel. \n~ 4 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-14T07:40:25.000Z",
-   "id": "1503274836063404033",
-   "text": "Steven Spielberg's Jet 3,641 mile (3,164 NM) flight from TEB to RTM\n ~ 2,977 gallons (11,269 liters). \n~ 19,952 pds (9,050 kg) of jet fuel used. \n~ $16,195 cost of fuel. \n~ 31 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-14T03:22:36.000Z",
-   "id": "1503209955612143619",
-   "text": "Kylie Jenner's Jet  ~ 83 gallons (316 liters). \n~ 559 pds (254 kg) of jet fuel used. \n~ $454 cost of fuel. \n~ 1 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-14T03:13:28.000Z",
-   "id": "1503207657888534531",
-   "text": "Oprah Winfrey's Jet  ~ 197 gallons (747 liters). \n~ 1,322 pds (600 kg) of jet fuel used. \n~ $1,073 cost of fuel. \n~ 2 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-13T22:40:48.000Z",
-   "id": "1503139039288995847",
-   "text": "Tiger Wood's Jet 144 mile (125 NM) flight from SRQ to \n ~ 210 gallons (797 liters). \n~ 1,410 pds (640 kg) of jet fuel used. \n~ $1,145 cost of fuel. \n~ 2 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-13T21:09:13.000Z",
-   "id": "1503115989956898821",
-   "text": "Puma/Jay-Z's Jet 102 mile (89 NM) flight from VNY to CLD\n ~ 189 gallons (714 liters). \n~ 1,264 pds (573 kg) of jet fuel used. \n~ $1,026 cost of fuel. \n~ 2 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-13T19:33:34.000Z",
-   "id": "1503091918158409729",
-   "text": "Puma/Jay-Z's Jet 1,952 mile (1,697 NM) flight from PDK to VNY\n ~ 1,957 gallons (7,410 liters). \n~ 13,119 pds (5,951 kg) of jet fuel used. \n~ $10,648 cost of fuel. \n~ 21 tons of CO2 emissions."
-  },
-  {
-   "created_at": "2022-03-13T11:57:59.000Z",
-   "id": "1502977269500985346",
-   "text": "Steven Spielberg's Jet 2,456 mile (2,134 NM) flight from VNY to TEB\n ~ 2,069 gallons (7,833 liters). \n~ 13,868 pds (6,290 kg) of jet fuel used. \n~ $11,256 cost of fuel. \n~ 22 tons of CO2 emissions."
   }
  ]
 }
