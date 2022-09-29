@@ -8,7 +8,6 @@ import (
 	"github.com/fontainecoutino/CelebsDontCare/database"
 	"github.com/fontainecoutino/CelebsDontCare/database/retrieve"
 	"github.com/fontainecoutino/CelebsDontCare/trip"
-	user "github.com/fontainecoutino/CelebsDontCare/users"
 )
 
 const basePath = "/api"
@@ -16,7 +15,7 @@ const basePath = "/api"
 func main() {
 	database.SetupDatabase()
 	trip.SetupRoutes(basePath)
-	user.SetupRoutes(basePath)
+	// user.SetupRoutes(basePath)
 	retrieve.SetupRoutes(basePath)
 
 	fmt.Println("Started service ...")

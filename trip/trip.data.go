@@ -9,6 +9,11 @@ import (
 	"github.com/fontainecoutino/CelebsDontCare/database"
 )
 
+/**
+ * Gets the specific trip from the database based on the id. Puts data into
+ * struct and returns with no error. If an error occurs then it returns an
+ * empty obj and the error.
+ */
 func getTrip(tripID int) (*Trip, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -35,6 +40,11 @@ func getTrip(tripID int) (*Trip, error) {
 	return trip, nil
 }
 
+/**
+ * Gets all the trips from the database. Puts data into a slice of
+ * structs and returns with no error. If an error occurs then it returns an
+ * empty obj and the error.
+ */
 func getTripList() ([]Trip, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -61,13 +71,18 @@ func getTripList() ([]Trip, error) {
 	return trips, nil
 }
 
+/**
+ * Inserts a given trip into the database. If an error occurs then it returns
+ * the error.
+ */
 func insertTrip(trip Trip) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	_, err := database.DB.ExecContext(ctx,
 		`INSERT INTO trips
 		(time_stamp, name, distance, gallons_used, cost_of_fuel, flight) 
-		VALUES ($1, $2, $3, $4, $5, $6)`,
+		VALUES 
+		($1, $2, $3, $4, $5, $6)`,
 		trip.TimeStamp,
 		trip.Name,
 		trip.Distance,
@@ -82,11 +97,15 @@ func insertTrip(trip Trip) error {
 	return nil
 }
 
-func removeTrip(productID int) error {
+/**
+ * Removes specific trip from database based on id. Returns error if one
+ * occurred.
+ */
+func removeTrip(tripID int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	_, err := database.DB.ExecContext(ctx,
-		`DELETE FROM trips where id = $1`, productID)
+		`DELETE FROM trips where id = $1`, tripID)
 	if err != nil {
 		log.Println(err.Error())
 		return err

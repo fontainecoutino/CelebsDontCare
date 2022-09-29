@@ -22,8 +22,7 @@ import (
 const URL = "http://localhost:5000/api/"
 
 /**
- *  Given an userID, gets all of their tweets. The tweets are stored in the file
- *  tweets.json. The tweets are stored to keep only the text and date of creation.
+ *  Given the source, it retrieves data from trips and stors them into the database
  */
 func getData(source string) (int, error) {
 	var newTrips int
@@ -53,25 +52,22 @@ func getData(source string) (int, error) {
 		// for all users write to data base
 		var nt int
 		for _, source := range sources {
-			nt, err = writeTweetsToDatabase(source, Path+"tweets.json")
+			nt, err = writeTweetsToDatabase(source)
 			newTrips += nt
 			if err != nil {
 				return newTrips, err
 			}
 		}
 	}
-	// userID := "1450174360346574850" // @CelebJets
 	return newTrips, err
 }
 
 /**
- *  The format of the file after the function is as follows. The tweets are
- *  stored to keep only the text and date of creation. Each tweet in the file is stored as a map
- * 	and a comma is added after wards. This is true for every tweet; which means that the function
- *  will produce a file that is not in json format. This should be fixed by the caller.
- *  all current tweets from TwitterUserID and store in tweets.json
+ * Based on the twitter source, get all th valid tweets that are trips an stores
+ * them into data base. It then updates the twitter source to store their latest
+ * tweet id. Lastly, it writes a log if at least one trip was written to database.
  */
-func writeTweetsToDatabase(source Twitter_Source, destination string) (int, error) {
+func writeTweetsToDatabase(source Twitter_Source) (int, error) {
 	allTweets, oldestID := getTweetsfromUser(source.Twitter_id, source.Last_tweet_id)
 
 	// write to trips to database
@@ -110,8 +106,11 @@ func writeTweetsToDatabase(source Twitter_Source, destination string) (int, erro
 	return num, nil
 }
 
+/**
+ * Based on the text it strips the info to store into the trip. It then
+ * stores into database. Returns 1 if successful.
+ */
 func insertTripIntoDatabase(tweet map[string]interface{}) int {
-
 	tripText := strings.Replace(tweet["text"].(string), "\n", "", -1)
 	fmt.Println(tripText)
 	split := strings.Split(tripText, "~")
@@ -163,11 +162,9 @@ func insertTripIntoDatabase(tweet map[string]interface{}) int {
 }
 
 /**
- *  The format of the file after the function is as follows. The tweets are
- *  stored to keep only the text and date of creation. Each tweet in the file is stored as a map
- * 	and a comma is added after wards. This is true for every tweet; which means that the function
- *  will produce a file that is not in json format. This should be fixed by the caller.
- *  all current tweets from TwitterUserID and store in tweets.json
+ *  Based on the userid, it gets al the tweets that are trips and have not been
+ *  evaluated since the lastTweetId. Temporarily stores into a raw file
+ *  but then deletes.
  */
 func getTweetsfromUser(userID string, lastTweetID string) ([]map[string]interface{}, string) {
 	var tripLogTweets []map[string]interface{}

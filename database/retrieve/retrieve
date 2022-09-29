@@ -1,7 +1,6 @@
 #!/bin/bash
 
 userID=$1
-bearerToken="AAAAAAAAAAAAAAAAAAAAAG51hAEAAAAAsck3v8QSQo%2BVeiZoSE2b3JSqdy8%3DpeKXanU2xKFDbc9uvk8pC47EoB1Bkiv1IKwCNXJdo91wSYTax4"
 
 if [$2 -e ""] 
 then

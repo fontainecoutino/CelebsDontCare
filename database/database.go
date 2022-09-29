@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -12,13 +13,15 @@ import (
 var DB *sql.DB
 
 func SetupDatabase() {
+	// info stored in environment
 	host := os.Getenv("dbhost")
 	port, _ := strconv.Atoi(os.Getenv("dbport"))
 	user := os.Getenv("dbuser")
 	password := os.Getenv("dbpassword")
 	dbname := os.Getenv("dbname")
 
-	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
 
 	var err error
 	DB, err = sql.Open("postgres", conn)
@@ -29,5 +32,5 @@ func SetupDatabase() {
 
 	DB.SetMaxOpenConns(3)
 	DB.SetMaxIdleConns(3)
-	//DB.SetConnMaxLifetime(60 * time.Second)
+	DB.SetConnMaxLifetime(60 * time.Second)
 }

@@ -2,6 +2,7 @@ package trip
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,13 +15,13 @@ const tripsPath = "trips"
 
 // SetupRoutes
 func SetupRoutes(apiBasePath string) {
-	tripHandler := http.HandlerFunc(handleTrip)
-	tripHandlerPath := apiBasePath + "/" + tripsPath + "/"
-	http.Handle(tripHandlerPath, cors.Middleware(tripHandler))
-
+	// /apiPath/trips
 	tripsHandler := http.HandlerFunc(handleTrips)
-	tripsHandlerPath := apiBasePath + "/" + tripsPath
-	http.Handle(tripsHandlerPath, cors.Middleware(tripsHandler))
+	http.Handle(fmt.Sprintf("%s/%s", apiBasePath, tripsPath), cors.Middleware(tripsHandler))
+
+	// /apiPath/trips/
+	tripHandler := http.HandlerFunc(handleTrip)
+	http.Handle(fmt.Sprintf("%s/%s/", apiBasePath, tripsPath), cors.Middleware(tripHandler))
 }
 
 func handleTrip(w http.ResponseWriter, r *http.Request) {
