@@ -22,6 +22,10 @@ func SetupRoutes(apiBasePath string) {
 	// /apiPath/trips/
 	tripHandler := http.HandlerFunc(handleTrip)
 	http.Handle(fmt.Sprintf("%s/%s/", apiBasePath, tripsPath), cors.Middleware(tripHandler))
+
+	// /apiPath/trips/gets-data-display
+	dataDisplayHandler := http.HandlerFunc(handleDataDisplay)
+	http.Handle(fmt.Sprintf("%s/%s/gets-data-display", apiBasePath, tripsPath), cors.Middleware(dataDisplayHandler))
 }
 
 func handleTrip(w http.ResponseWriter, r *http.Request) {
@@ -114,6 +118,32 @@ func handleTrips(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
+
+	case http.MethodOptions:
+		return
+
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
+func handleDataDisplay(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	// GET
+	case http.MethodGet:
+		dataDisplay, err := getDataDisplay()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		j, err := json.Marshal(dataDisplay)
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = w.Write(j)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 	case http.MethodOptions:
 		return

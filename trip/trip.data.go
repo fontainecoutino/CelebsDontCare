@@ -112,3 +112,41 @@ func removeTrip(tripID int) error {
 	}
 	return nil
 }
+
+/**
+ * Gets the data to be displayed from the database. Puts data into
+ * struct and returns with no error. If an error occurs then it returns an
+ * empty obj and the error.
+ */
+func getDataDisplay() ([]DataDisplay, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	results, err := database.DB.QueryContext(ctx, `
+	SELECT 
+			name, 
+			FLOOR(SUM(distance)*1.609) distance_traveled_km,
+			ROUND((SUM(gallons_used)*3.125*3.16)/1000, 1) co2_produced_tons,
+			ROUND(((SUM(gallons_used)*3.125*3.16)/.00171)/1000000, 1) million_plastic_straws_equivalent
+		FROM trips
+		GROUP BY name
+		ORDER BY sum(gallons_used) desc;`)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+	defer results.Close()
+
+	tableData := make([]DataDisplay, 0)
+	for results.Next() {
+		var data DataDisplay
+		results.Scan(
+			&data.Name,
+			&data.DistanceTraveled,
+			&data.CO2Produced,
+			&data.PlasticStrawsUsed)
+
+		tableData = append(tableData, data)
+	}
+	return tableData, nil
+}
