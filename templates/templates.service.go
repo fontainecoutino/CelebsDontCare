@@ -12,8 +12,15 @@ var tmpl *template.Template
 // SetupRoutes
 func SetupRoutes() {
 	// be able to access assets folder
-	fs := http.FileServer(http.Dir("assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets", fs))
+	/*
+		fs := http.FileServer(http.Dir("assets"))
+		http.Handle("/assets/", http.StripPrefix("/assets", fs))
+	*/
+	bootstrap := http.FileServer(http.Dir("bootstrap/assets"))
+	http.Handle("/bootstrap/assets/", http.StripPrefix("/bootstrap/assets", bootstrap))
+
+	assets := http.FileServer(http.Dir("assets"))
+	http.Handle("/assets/", http.StripPrefix("/assets", assets))
 
 	// home
 	homeHandler := http.HandlerFunc(handleHome)
