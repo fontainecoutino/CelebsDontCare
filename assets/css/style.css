@@ -12,3 +12,7 @@ h1, h3, h4, p {
 .section {
     margin: 50px 0;
 }
+
+img {
+    width: 200px;
+}

@@ -186,7 +186,8 @@ func getTweetsfromUser(userID string, lastTweetID string) ([]map[string]interfac
 				lastTweetReached = true
 				break
 			}
-			if strings.Contains(tweet["text"].(string), "gallons") &&
+			if strings.Contains(tweet["text"].(string), "'s") &&
+				strings.Contains(tweet["text"].(string), "gallons") &&
 				strings.Contains(tweet["text"].(string), "CO2 emissions") {
 
 				oid, _ := strconv.Atoi(oldestID)
