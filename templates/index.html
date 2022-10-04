@@ -12,88 +12,101 @@
 
     <body class="is-preload">
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+        <!-- Wrapper -->
+        <div id="wrapper">
 
-				<!-- Header -->
-					<header id="header" >
-						<h1><b>Celebs Don't Care</b></h1>
-						<p>How much do celebrities pollute with their jets?</p>
-					</header>
+            <!-- Header -->
+                <header id="header" >
+                    <h1><b>Celebs Don't Care</b></h1>
+                    <p>How much do celebrities pollute with their jets?</p>
+                </header>
 
-				<!-- Main -->
-					<div id="main">
+            <!-- Main -->
+                <div id="main">
 
-						<!-- Purpose -->
-							<section id="intro" class="main special">
-								<div class="spotlight">
-									<div class="content">
-										<header class="major">
-											<h2><b>Purpose</b></h2>
-										</header>
-										<p>After looking at <a href="https://www.instagram.com/p/CgDCvEDvUJz/">this
-                                            post</a> from Kylie Jenner and Travis Scott, it makes you think
-                                            if you are really making a change. You know? I stopped using
-                                            straws, did it matter? Well... maybe not as much as I think
-                                            but I am helping even if it's the smallest of changes. Either way,
-                                            how much are celebrities are polluting? Well we can find out using
-                                            this tool.</p>
-									</div>
-								</div>
-							</section>
+                    <!-- Purpose -->
+                        <section id="intro" class="main special">
+                            <div class="spotlight">
+                                <div class="content">
+                                    <header class="major">
+                                        <h2><b>Purpose</b></h2>
+                                    </header>
+                                    <p>After looking at <a href="https://www.instagram.com/p/CgDCvEDvUJz/">this
+                                        post</a> from Kylie Jenner and Travis Scott, it makes you think
+                                        if you are really making a change. You know? I stopped using
+                                        straws, did it matter? Well... maybe not as much as I think
+                                        but I am helping even if it's the smallest of changes. Either way,
+                                        how much are celebrities are polluting? Well we can find out using
+                                        this tool. <br/>
+                                    
+                                        For the future I would like to make the data interactive and give users 
+                                        the ability to filter and sort. :)
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
 
-						<!-- Tool -->
-							<section id="tool" class="main special">
-								<header class="major">
-									<h2><b>Tool</b></h2>
-								</header>
-								<p>Data gathered is displayed to show how bad celebrities are
-                                    damaging the world. It makes comparisons to show their true
-                                    impact. Filter and find out.</p>
+                    <!-- Data -->
+                        <section id="data" class="main special">
+                            <header class="major">
+                                <h2><b>Data</b></h2>
+                            </header>
+                            
+                            <p>Data gathered is displayed to show how bad celebrities (and some organizations)
+                                are damaging the world. It makes comparisons to show their true
+                                impact. Filter and find out.</p>
 
-							</section>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th data-column="name" data-order="desc">Name</th>
+                                            <th data-column="distance_traveled" data-order="desc">Distance Traveled (km)</th>
+                                            <th data-column="co2_produced" data-order="desc">Tons of CO2 Burned</th>
+                                            <th data-column="plastic_straws_used" data-order="desc">= Plastic Straws Used</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dataTable"></tbody>
+                                </table>
+                            </div> 
+                            
+							<a onclick="updateTable();" class="button small">Reset</a>
+                            
+                            <p>
+                                <br><i>Data is updated every hour since March 3rd, 2022.<br/>
+                                If data is not loading, wait a couple seconds and then refresh the page.</i>
+                            </p>
+                        </section>
 
-					</div>
+                </div>
 
-				<!-- Footer -->
-					<footer id="footer">
-						<section>
-							<h2><b>Credits</b></h2>
-                            <p>Built with Go, PostgreSQL, jQuery. <br/>
-                                I want to thank <a href="https://twitter.com/JxckSweeney">Jack
-                                Sweeney</a> for gathering the data used for this project!  <br/>
-                                If you would like to look at more data, take a look at 
-                                <a href="https://twitter.com/i/lists/1307414615316467715?ref_src=twsrc%5Etfw%7Ctwcamp%5Eembeddedtimeline%7Ctwterm%5Escreen-name%2Fslug%3AJxckSweeney%2Fplane-notify-accounts1%7Ctwcon%5Es2">Jack's twitter group</a>.</p>
-						</section>
-						<p class="copyright">&copy; Fontaine Coutino: <a href="https://fontainecoutino.me/">fontainecoutino</a></p>
-					</footer>
+            <!-- Footer -->
+                <footer id="footer">
+                    <section>
+                        <h2><b>Credits</b></h2>
+                        <p>Built with Go, PostgreSQL, jQuery. <br/>
+                            I want to thank <a href="https://twitter.com/JxckSweeney">Jack
+                            Sweeney</a> for gathering the data used for this project!  <br/>
+                            If you would like to look at more data, take a look at 
+                            <a href="https://twitter.com/i/lists/1307414615316467715?ref_src=twsrc%5Etfw%7Ctwcamp%5Eembeddedtimeline%7Ctwterm%5Escreen-name%2Fslug%3AJxckSweeney%2Fplane-notify-accounts1%7Ctwcon%5Es2">Jack's twitter group</a>.</p>
+                    </section>
+                    <p class="copyright">&copy; Fontaine Coutino: <a href="https://fontainecoutino.me/">fontainecoutino</a></p>
+                </footer>
 
-			</div>
+        </div>
 
-		<!-- Scripts -->
-			<script src="/bootstrap/assets/js/jquery.min.js"></script>
-			<script src="/bootstrap/assets/js/jquery.scrollex.min.js"></script>
-			<script src="/bootstrap/assets/js/jquery.scrolly.min.js"></script>
-			<script src="/bootstrap/assets/js/browser.min.js"></script>
-			<script src="/bootstrap/assets/js/breakpoints.min.js"></script>
-			<script src="/bootstrap/assets/js/util.js"></script>
-			<script src="/bootstrap/assets/js/main.js"></script>
+        <!-- Scripts -->
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
+        <script src="/assets/js/main.js"></script>
+
+        <script src="/bootstrap/assets/js/jquery.min.js"></script>
+        <script src="/bootstrap/assets/js/jquery.scrollex.min.js"></script>
+        <script src="/bootstrap/assets/js/jquery.scrolly.min.js"></script>
+        <script src="/bootstrap/assets/js/browser.min.js"></script>
+        <script src="/bootstrap/assets/js/breakpoints.min.js"></script>
+        <script src="/bootstrap/assets/js/util.js"></script>
+        <script src="/bootstrap/assets/js/main.js"></script>
 	</body>
 
 </html>
-
-<!--
-    # Celebs Don't Care
-#### How much do celebrities pollute with their jets?
-
-### Purpose
-After looking at [this post](https://www.instagram.com/p/CgDCvEDvUJz/) from Kylie Jenner and Travis Scott, it makes you think if you are really making a change. You know? I stopped using straws, did it matter? Well... maybe not as much as I think but I am helping even if it's the smallest of changes. Either way, how much are celebrities are polluting? Well we can find out using this tool.
-
-### Tool
-Data gathered is displayed to show how bad celebrities are damaging the world. It makes comparisons to show their true impact. Filter and find out.
-
-### Credits
-Built with Go, PostgreSQL, jQuery
-I want to thank [Jack Sweeney](https://twitter.com/JxckSweeney) for gathering the data used for this project!
--->
