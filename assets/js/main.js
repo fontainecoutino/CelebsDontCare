@@ -1,4 +1,21 @@
+
+// url for api / retrieval
+const URL = 'http://localhost:5000/'
+
 $(window).bind("load", setUpTable());
+
+setInterval(function () {
+    var date = new Date()
+    if (date.getMinutes() == 0){
+        $.ajax({
+            method: 'GET',
+            url: URL + 'api/retrieve',
+            success:function(response){
+                console.log(response)
+            }
+        })
+    }
+}, 30 * 1000)
 
 function setUpTable(){
     // sets up data first
@@ -9,7 +26,7 @@ function setUpTable(){
         var tableHeader = this
         $.ajax({
             method: 'GET',
-            url:'http://localhost:5000/api/trips/gets-data-display',
+            url:'api/trips/gets-data-display',
             success:function(response){
                 var data = response 
                 
@@ -42,7 +59,6 @@ function updateTable(){
 }
 
 function setData(data){
-    console.log('set')
     // update table
     var table = document.getElementById('dataTable')
     table.innerHTML = ''

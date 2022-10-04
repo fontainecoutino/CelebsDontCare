@@ -21,7 +21,9 @@ func main() {
 	database.SetupDatabase()
 	trip.SetupRoutes(basePath)
 	retrieve.SetupRoutes(basePath)
-	// user.SetupRoutes(basePath)
+	// user.SetupRoutes(basePath) // not currently being used
+
+	// sets up data retrieval for every hour
 
 	// start service :)
 	fmt.Println("Started service ...")
