@@ -26,6 +26,6 @@ func main() {
 	// sets up data retrieval for every hour
 
 	// start service :)
-	fmt.Println("Started service ...")
-	log.Fatal(http.ListenAndServe(":5000", nil))
+	fmt.Println("Started service on http://localhost:4200/ ...")
+	log.Fatal(http.ListenAndServe(":4200", nil))
 }
