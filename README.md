@@ -15,9 +15,9 @@ recorded data so everything gathered is now gone. This was a project to show my
 friend that celebrities don't care about the environment. If you would like to educate 
 yourself more here are some articles on the topic :).
 
-[Climate Impact of the Rich and Famous](https://time.com/6208632/celebrities-climate-impact-private-jets-yachts/)
-[Celebrities use private jets excessively](https://www.washingtonpost.com/climate-environment/2022/08/02/taylor-swift-kylie-jenner-private-jet-emissions/)
-[10 worst celebrity private jet polluters](https://www.wfla.com/entertainment-news/celebrity-news/these-celebrity-owned-jets-are-the-biggest-co2-polluters-2/)
+- [Climate Impact of the Rich and Famous](https://time.com/6208632/celebrities-climate-impact-private-jets-yachts/)
+- [Celebrities use private jets excessively](https://www.washingtonpost.com/climate-environment/2022/08/02/taylor-swift-kylie-jenner-private-jet-emissions/)
+- [10 worst celebrity private jet polluters](https://www.wfla.com/entertainment-news/celebrity-news/these-celebrity-owned-jets-are-the-biggest-co2-polluters-2/)
 
 Stay safe! - Fontaine
 
